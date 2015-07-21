@@ -30,7 +30,7 @@ public class App
 			System.out.println(status.toString());
 			
 			// POST request
-			uri = new URI("http://localhost:30020/api/dhis");
+			uri = new URI("http://localhost:30020/" + Constant.FORM_SUBMIT_URL);
 			FormData formData = new FormData();
 			formData.addParam("params1", "test");
 			
