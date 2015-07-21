@@ -1,4 +1,4 @@
-package org.instedd.hub.client.hub_client;
+package org.instedd.hub.client;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

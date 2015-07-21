@@ -1,4 +1,4 @@
-package org.instedd.hub.client;
+package org.instedd.hub.client.http.utils;
 
 import java.io.UnsupportedEncodingException;
 
@@ -9,9 +9,9 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Kakada Chheang
  */
-public class CodecUtils
+public class EncodingUtils
 {
-    private static final Log log = LogFactory.getLog( CodecUtils.class );
+    private static final Log log = LogFactory.getLog( EncodingUtils.class );
     
     private static final String CHARSET = "8859_1";
     private static final Base64 codec = new Base64();
