@@ -23,8 +23,10 @@ import org.json.JSONObject;
  */
 public class HttpPostRequest extends AbstractHttpRequest {
 	
-	public HttpPostRequest(URI uri, String username, String password) {
-		super(uri, username, password, Constant.HTTP_METHOD_POST);
+	private HttpPost request;
+	
+	public HttpPostRequest(URI uri){
+		request = new HttpPost(uri);
 	}
 
 	public ResponseStatus send() throws IOException {
@@ -32,11 +34,7 @@ public class HttpPostRequest extends AbstractHttpRequest {
 		ResponseStatus status = null;
 		
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost request = new HttpPost(this.getUri());
 		
-		// add request header
-		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(this.getUsername(), this.getPassword()));
- 
 		request.setEntity(new UrlEncodedFormEntity(this.getFormData().getParams()));
 		
 		HttpResponse response = client.execute(request);
@@ -52,6 +50,15 @@ public class HttpPostRequest extends AbstractHttpRequest {
 		}
 		
 		return status;
+	}
+	
+	/**
+	 * Set basic authentication to request header
+	 * @param username
+	 * @param password
+	 */
+	public void setBasicAuthentication(String username, String password) {
+		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(username, password));
 	}
 	
 }

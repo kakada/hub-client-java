@@ -24,17 +24,17 @@ public class App
     		String password = "";
     		
     		// GET request
-    		IHubClientService hubClientService = new HubClientServiceImpl();
-    		ResponseStatus status = hubClientService.doGet(uri, username, password);
+    		IHubClientService hubClientService = new HubClientServiceImpl(username, password);
+    		ResponseStatus status = hubClientService.doGet(uri);
 			
 			System.out.println(status.toString());
 			
 			// POST request
-			uri = new URI("http://localhost:30020/" + Constant.FORM_SUBMIT_URL);
+			uri = new URI("http://localhost:3000/" + Constant.FORM_SUBMIT_URL);
 			FormData formData = new FormData();
 			formData.addParam("params1", "test");
 			
-			status = hubClientService.doPost(uri, username, password, formData);
+			status = hubClientService.doPost(uri, formData);
 			
 			System.out.println(status.toString());
 		} catch (URISyntaxException e1) {

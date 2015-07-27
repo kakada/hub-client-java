@@ -25,20 +25,21 @@ import org.json.JSONObject;
  */
 public class HttpGetRequest extends AbstractHttpRequest {
 	
-	public HttpGetRequest(URI uri, String username, String password) {
-		super(uri, username, password);
+	private HttpGet request = null;
+	
+	public HttpGetRequest(URI uri) {
+		request = new HttpGet(uri);
 	}
 
+	/**
+	 * send request to URI
+	 */
 	public ResponseStatus send() throws IOException {
 		
 		ResponseStatus status = null;
 			
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(this.getUri());
 		
-		// add request header
-		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(this.getUsername(), this.getPassword()));
- 
 		HttpResponse response = client.execute(request);
  
 		BufferedReader reader = new BufferedReader(
@@ -54,5 +55,14 @@ public class HttpGetRequest extends AbstractHttpRequest {
 		return status;
  
 	}
-
+	
+	/**
+	 * Set basic authentication to request header
+	 * @param username
+	 * @param password
+	 */
+	public void setBasicAuthentication(String username, String password) {
+		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(username, password));
+	}
+	
 }

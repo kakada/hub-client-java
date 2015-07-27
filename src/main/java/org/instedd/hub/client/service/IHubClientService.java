@@ -10,6 +10,6 @@ import org.instedd.hub.client.http.response.ResponseStatus;
  *
  */
 public interface IHubClientService {
-	ResponseStatus doGet(URI uri, String username, String password);
-	ResponseStatus doPost(URI uri, String username, String password, FormData formData);
+	ResponseStatus doGet(URI uri);
+	ResponseStatus doPost(URI uri, FormData formData);
 }

@@ -14,11 +14,21 @@ import org.instedd.hub.client.http.response.ResponseStatus;
  *
  */
 public class HubClientServiceImpl implements IHubClientService {
-
-	public ResponseStatus doGet(URI uri, String username, String password) {
+	
+	private String username;
+	private String password;
+	
+	public HubClientServiceImpl(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+	
+	public ResponseStatus doGet(URI uri) {
 		ResponseStatus status = null;
 		
-		AbstractHttpRequest httpGetRequest = new HttpGetRequest(uri, username, password);
+		AbstractHttpRequest httpGetRequest = new HttpGetRequest(uri);
+		httpGetRequest.setBasicAuthentication(username, password);
+		
 		try {
 			status = httpGetRequest.send();
 		} catch (IOException e) {
@@ -27,11 +37,13 @@ public class HubClientServiceImpl implements IHubClientService {
 		return status;
 	}
 
-	public ResponseStatus doPost(URI uri, String username, String password, FormData formData) {
+	public ResponseStatus doPost(URI uri, FormData formData) {
 		ResponseStatus status = null;
 		
-		AbstractHttpRequest httpPostRequest = new HttpPostRequest(uri, username, password);
+		AbstractHttpRequest httpPostRequest = new HttpPostRequest(uri);
+		httpPostRequest.setBasicAuthentication(username, password);
 		httpPostRequest.setFormData(formData);
+		
 		try {
 			status = httpPostRequest.send();
 		} catch (IOException e) {

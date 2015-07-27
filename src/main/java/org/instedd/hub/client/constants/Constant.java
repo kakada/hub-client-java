@@ -11,7 +11,4 @@ public class Constant {
 	
 	public static final String HEADER_AUTHORIZATION = "Authorization";
 	
-	public static final String HTTP_METHOD_GET = "GET";
-	public static final String HTTP_METHOD_POST = "POST";
-
 }
