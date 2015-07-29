@@ -8,11 +8,10 @@ import java.net.URI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.instedd.hub.client.constants.Constant;
-import org.instedd.hub.client.http.response.ResponseStatus;
 import org.instedd.hub.client.http.response.parser.JsonParser;
 import org.instedd.hub.client.http.utils.EncodingUtils;
 import org.json.JSONObject;
@@ -21,21 +20,21 @@ import org.json.JSONObject;
  * @author Kakada Chheang
  *
  */
-public class HttpPostRequest extends AbstractHttpRequest {
+public class HttpJsonPostRequest extends AbstractHttpJsonRequest {
 	
 	private HttpPost request;
 	
-	public HttpPostRequest(URI uri){
+	public HttpJsonPostRequest(URI uri){
 		request = new HttpPost(uri);
 	}
 
-	public ResponseStatus send() throws IOException {
+	public JSONObject send() throws IOException {
 		
-		ResponseStatus status = null;
+		JSONObject json = new JSONObject();
 		
 		HttpClient client = HttpClientBuilder.create().build();
 		
-		request.setEntity(new UrlEncodedFormEntity(this.getFormData().getParams()));
+		request.setEntity(new StringEntity(this.getFormData().getParamsAsJson().toString()));
 		
 		HttpResponse response = client.execute(request);
  
@@ -43,22 +42,21 @@ public class HttpPostRequest extends AbstractHttpRequest {
                        new InputStreamReader(response.getEntity().getContent()));
  
 		if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK) {
-			JSONObject json = JsonParser.parse(bufferReader);
-			status = new ResponseStatus(json.getBoolean(ResponseStatus.AVAILABLE), json.getString(ResponseStatus.MESSAGE));
+			json = JsonParser.parse(bufferReader);
 		} else {
-			status = new ResponseStatus(false, response.getStatusLine().getReasonPhrase());
+			json.put(Constant.RESPONSE_STATUS, "FAILED");
+			json.put(Constant.RESPONSE_MESSAGE, "Something went wrong");
 		}
 		
-		return status;
+		return json;
 	}
 	
-	/**
-	 * Set basic authentication to request header
-	 * @param username
-	 * @param password
-	 */
 	public void setBasicAuthentication(String username, String password) {
 		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(username, password));
+	}
+	
+	public void setDefaultHeaders() {
+		request.setHeaders(getDefaultHeaders());
 	}
 	
 }

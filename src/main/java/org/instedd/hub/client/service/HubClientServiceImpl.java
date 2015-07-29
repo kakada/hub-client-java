@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.instedd.hub.client.form.FormData;
-import org.instedd.hub.client.http.AbstractHttpRequest;
-import org.instedd.hub.client.http.HttpGetRequest;
-import org.instedd.hub.client.http.HttpPostRequest;
-import org.instedd.hub.client.http.response.ResponseStatus;
+import org.instedd.hub.client.http.AbstractHttpJsonRequest;
+import org.instedd.hub.client.http.HttpJsonGetRequest;
+import org.instedd.hub.client.http.HttpJsonPostRequest;
+import org.json.JSONObject;
 
 /**
  * @author Kakada Chheang
@@ -23,33 +23,33 @@ public class HubClientServiceImpl implements IHubClientService {
 		this.password = password;
 	}
 	
-	public ResponseStatus doGet(URI uri) {
-		ResponseStatus status = null;
+	public JSONObject doGet(URI uri) {
+		JSONObject json = new JSONObject();
 		
-		AbstractHttpRequest httpGetRequest = new HttpGetRequest(uri);
+		AbstractHttpJsonRequest httpGetRequest = new HttpJsonGetRequest(uri);
 		httpGetRequest.setBasicAuthentication(username, password);
 		
 		try {
-			status = httpGetRequest.send();
+			json = httpGetRequest.send();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return status;
+		return json;
 	}
 
-	public ResponseStatus doPost(URI uri, FormData formData) {
-		ResponseStatus status = null;
+	public JSONObject doPost(URI uri, FormData formData) {
+		JSONObject json = new JSONObject();
 		
-		AbstractHttpRequest httpPostRequest = new HttpPostRequest(uri);
+		AbstractHttpJsonRequest httpPostRequest = new HttpJsonPostRequest(uri);
 		httpPostRequest.setBasicAuthentication(username, password);
 		httpPostRequest.setFormData(formData);
 		
 		try {
-			status = httpPostRequest.send();
+			json = httpPostRequest.send();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return status;
+		return json;
 	}
 	
 }

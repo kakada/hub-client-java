@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 /**
  * @author Kakada Chheang
@@ -29,7 +30,6 @@ public class FormData {
 		params.put(key, value);
 	}
 	
-	
 	/**
 	 * return: list of NameValuePair that is used for url parameter in http post request
 	 */
@@ -42,4 +42,18 @@ public class FormData {
 		
 		return params;
 	}
+	
+	/**
+	 * return: json object that is used for url parameter in http post request
+	 */
+	public JSONObject getParamsAsJson() {
+		JSONObject json = new JSONObject();
+		
+		for(Entry<String, String> entry : this.params.entrySet()) {
+			json.put(entry.getKey(), entry.getValue());
+		}
+		
+		return json;
+	}
+	
 }

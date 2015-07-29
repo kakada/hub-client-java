@@ -14,7 +14,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.instedd.hub.client.constants.Constant;
-import org.instedd.hub.client.http.response.ResponseStatus;
 import org.instedd.hub.client.http.response.parser.JsonParser;
 import org.instedd.hub.client.http.utils.EncodingUtils;
 import org.json.JSONObject;
@@ -23,20 +22,20 @@ import org.json.JSONObject;
  * @author Kakada Chheang
  *
  */
-public class HttpGetRequest extends AbstractHttpRequest {
+public class HttpJsonGetRequest extends AbstractHttpJsonRequest {
 	
 	private HttpGet request = null;
 	
-	public HttpGetRequest(URI uri) {
+	public HttpJsonGetRequest(URI uri) {
 		request = new HttpGet(uri);
 	}
 
 	/**
 	 * send request to URI
 	 */
-	public ResponseStatus send() throws IOException {
+	public JSONObject send() throws IOException {
 		
-		ResponseStatus status = null;
+		JSONObject json = new JSONObject();
 			
 		HttpClient client = HttpClientBuilder.create().build();
 		
@@ -46,23 +45,22 @@ public class HttpGetRequest extends AbstractHttpRequest {
                        new InputStreamReader(response.getEntity().getContent()));
  
 		if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK) {
-			JSONObject json = JsonParser.parse(reader);
-			status = new ResponseStatus(json.getBoolean(ResponseStatus.AVAILABLE), json.getString(ResponseStatus.MESSAGE));
+			json = JsonParser.parse(reader);
 		} else {
-			status = new ResponseStatus(false, response.getStatusLine().getReasonPhrase());
+			json.put(Constant.RESPONSE_STATUS, "FAILED");
+			json.put(Constant.RESPONSE_MESSAGE, "Something went wrong");
 		}
 		
-		return status;
- 
+		return json;
 	}
 	
-	/**
-	 * Set basic authentication to request header
-	 * @param username
-	 * @param password
-	 */
 	public void setBasicAuthentication(String username, String password) {
 		request.setHeader(Constant.HEADER_AUTHORIZATION, EncodingUtils.getBasicAuthString(username, password));
 	}
+	
+	public void setDefaultHeaders() {
+		request.setHeaders(getDefaultHeaders());
+	}
+	
 	
 }
